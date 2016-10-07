@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class ModelManager extends ComponentManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
-    private final TaskManager addressBook;
+    private final TaskManager taskManager;
     private final FilteredList<Task> filteredTasks;
 
     /**
@@ -33,10 +33,10 @@ public class ModelManager extends ComponentManager implements Model {
         assert src != null;
         assert userPrefs != null;
 
-        logger.fine("Initializing with address book: " + src + " and user prefs " + userPrefs);
+        logger.fine("Initializing with task manager: " + src + " and user prefs " + userPrefs);
 
-        addressBook = new TaskManager(src);
-        filteredTasks = new FilteredList<>(addressBook.getTasks());
+        taskManager = new TaskManager(src);
+        filteredTasks = new FilteredList<>(taskManager.getTasks());
     }
 
     public ModelManager() {
@@ -44,35 +44,35 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     public ModelManager(ReadOnlyTaskManager initialData, UserPrefs userPrefs) {
-        addressBook = new TaskManager(initialData);
-        filteredTasks = new FilteredList<>(addressBook.getTasks());
+        taskManager = new TaskManager(initialData);
+        filteredTasks = new FilteredList<>(taskManager.getTasks());
     }
 
     @Override
     public void resetData(ReadOnlyTaskManager newData) {
-        addressBook.resetData(newData);
+        taskManager.resetData(newData);
         indicateTaskManagerChanged();
     }
 
     @Override
     public ReadOnlyTaskManager getTaskManager() {
-        return addressBook;
+        return taskManager;
     }
 
     /** Raises an event to indicate the model has changed */
     private void indicateTaskManagerChanged() {
-        raise(new TaskManagerChangedEvent(addressBook));
+        raise(new TaskManagerChangedEvent(taskManager));
     }
 
     @Override
     public synchronized void deleteTask(ReadOnlyTask target) throws TaskNotFoundException {
-        addressBook.removeTask(target);
+        taskManager.removeTask(target);
         indicateTaskManagerChanged();
     }
 
     @Override
     public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
-        addressBook.addTask(task);
+        taskManager.addTask(task);
         updateFilteredListToShowAll();
         indicateTaskManagerChanged();
     }
