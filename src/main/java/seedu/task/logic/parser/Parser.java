@@ -20,6 +20,7 @@ import seedu.task.commons.util.StringUtil;
 import seedu.task.logic.commands.AddCommand;
 import seedu.task.logic.commands.ClearCommand;
 import seedu.task.logic.commands.Command;
+import seedu.task.logic.commands.CustomizeCommand;
 import seedu.task.logic.commands.DeleteCommand;
 import seedu.task.logic.commands.DoneCommand;
 import seedu.task.logic.commands.EditCommand;
@@ -56,6 +57,7 @@ public class Parser {
     public static final Prefix intervalPrefix = new Prefix(" i/", true);
     public static final Prefix timeIntervalPrefix = new Prefix(" ti/", true);
     public static final Prefix tagArgumentsPrefix = new Prefix(" t/"); 
+    public static final Prefix formatCustomCommandPrefix = new Prefix(" f/"); 
     //@@author 
 
     
@@ -115,7 +117,7 @@ public class Parser {
             return prepareFind(arguments);
 
         case ListCommand.COMMAND_WORD:
-            return new ListCommand();
+            return new ListCommand(); 
 
         case ExitCommand.COMMAND_WORD:
             return new ExitCommand();
@@ -128,6 +130,9 @@ public class Parser {
             
         case DoneCommand.COMMAND_WORD:
             return prepareDone(arguments);
+            
+        case CustomizeCommand.COMMAND_WORD:
+        	return prepareCustomize(arguments);
 
         case UndoCommand.COMMAND_WORD:
             return new UndoCommand();
@@ -177,6 +182,23 @@ public class Parser {
 			return new IncorrectCommand(nvfrt.getMessage());
 		}
     }
+    
+    private Command prepareCustomize(String args) throws ParseException{
+		ArgumentTokenizer argsTokenizer = new ArgumentTokenizer(formatCustomCommandPrefix);
+		argsTokenizer.tokenize(args);
+		try {
+			return new CustomizeCommand(argsTokenizer.getPreamble(),argsTokenizer.getValue(formatCustomCommandPrefix));
+		} catch (NoSuchElementException nsee) {
+			return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CustomizeCommand.MESSAGE_USAGE));
+		} catch (NoValueForRequiredTagException nvfrt) {
+			return new IncorrectCommand(nvfrt.getMessage());
+		}
+    }
+    
+    
+    
+    
+    
     /**
      * Check if the input is present, hence having the attribute of task optional
      * @param input of task's attribute

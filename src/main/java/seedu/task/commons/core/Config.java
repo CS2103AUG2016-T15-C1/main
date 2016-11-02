@@ -1,5 +1,6 @@
 package seedu.task.commons.core;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -16,7 +17,7 @@ public class Config {
     private String userPrefsFilePath = "preferences.json";
     private String taskManagerFilePath = "data/taskmanager.xml";
     private String taskManagerName = "MyTaskManager";
-
+    HashMap<String, String> cutomCommands = new HashMap<String, String>();
 
     public Config() {
     }
@@ -59,6 +60,10 @@ public class Config {
 
     public void setTaskManagerName(String taskManagerName) {
         this.taskManagerName = taskManagerName;
+    }
+    
+    public void setCustomCommandFormat(String commandWord, String userCommand){
+    	this.cutomCommands.put(commandWord, userCommand);
     }
 
 
