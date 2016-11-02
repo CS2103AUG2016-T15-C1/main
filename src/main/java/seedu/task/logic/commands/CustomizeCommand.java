@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import seedu.task.commons.core.Config;
+import seedu.task.commons.core.Config.DublicatedValueCustomCommandsException;
 import seedu.task.commons.util.ConfigUtil;
 import seedu.task.storage.StorageManager;
 
@@ -19,15 +20,16 @@ public class CustomizeCommand extends Command {
 	private String userCommand;
 
 	public CustomizeCommand(String commandWord, String userCommand) {
-		this.commandWord = commandWord;
-		this.userCommand = userCommand;
+		this.commandWord = commandWord.toLowerCase();
+		this.userCommand = userCommand.toLowerCase();
 	}
 
 	@Override
 	public CommandResult execute() {
-		Config config = new Config();
+		Config config = Config.getInstance();
 		String configFilePathUsed = Config.DEFAULT_CONFIG_FILE;
-
+		if (!isCommandWordPresent(commandWord))
+			return new CommandResult("There is no such command.");
 		try {
 			config.setCustomCommandFormat(commandWord, userCommand);
 			ConfigUtil.saveConfig(config, configFilePathUsed);
@@ -38,21 +40,21 @@ public class CustomizeCommand extends Command {
 			model.getCommandForUndo();
 			return new CommandResult(
 					"Failed to add customized format: " + userCommand + " for command: " + commandWord);
+		} catch (DublicatedValueCustomCommandsException e) {
+			return new CommandResult(e.getMessage());
 		}
 
 	}
 
-	
-	public static List<String> getAllFields(List<String> fields, Class<?> type) {
-	    fields.addAll(Arrays.asList(Command.class.co));
-
-	    if (type.getSuperclass() != null) {
-	        fields = getAllFields(fields, type.getSuperclass());
-	    }
-
-	    return fields;
+	private boolean isCommandWordPresent(String commandWord) {
+		List<String> commands = Arrays.asList(AddCommand.COMMAND_WORD, SelectCommand.COMMAND_WORD,
+				DeleteCommand.COMMAND_WORD, ClearCommand.COMMAND_WORD, EditCommand.COMMAND_WORD,
+				FindCommand.COMMAND_WORD, ListCommand.COMMAND_WORD, ExitCommand.COMMAND_WORD, HelpCommand.COMMAND_WORD,
+				SaveCommand.COMMAND_WORD, DoneCommand.COMMAND_WORD, CustomizeCommand.COMMAND_WORD,
+				UndoCommand.COMMAND_WORD);
+		return commands.contains(commandWord);
 	}
-	
+
 	/**
 	 * Save Command is not reversible.
 	 */
@@ -65,4 +67,5 @@ public class CustomizeCommand extends Command {
 	public boolean isReversible() {
 		return true;
 	}
+
 }

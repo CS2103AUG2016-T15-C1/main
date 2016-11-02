@@ -1,14 +1,14 @@
 package seedu.address.commons.core;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import seedu.task.commons.core.Config;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class ConfigTest {
     @Rule
@@ -22,12 +22,12 @@ public class ConfigTest {
                 "Local data file location : data/taskmanager.xml\n" +
                 "TaskManager name : MyTaskManager";
 
-        assertEquals(defaultConfigAsString, new Config().toString());
+        assertEquals(defaultConfigAsString, Config.getInstance().toString());
     }
 
     @Test
     public void equalsMethod(){
-        Config defaultConfig = new Config();
+        Config defaultConfig = Config.getInstance();
         assertFalse(defaultConfig.equals(null));
         assertTrue(defaultConfig.equals(defaultConfig));
     }

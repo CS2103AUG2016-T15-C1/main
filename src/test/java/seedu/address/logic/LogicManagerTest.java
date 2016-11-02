@@ -522,7 +522,7 @@ public class LogicManagerTest {
     public void execute_save_successful() throws Exception {
 
      
-        Config config = new Config();
+        Config config = Config.getInstance();
         
         String expectedMessage = "Change save path:.\\test Updated";
         assertCommandBehavior("save .\\test", expectedMessage);

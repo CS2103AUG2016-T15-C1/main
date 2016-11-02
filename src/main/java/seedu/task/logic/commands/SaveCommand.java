@@ -35,7 +35,7 @@ public static final String MESSAGE_USAGE = COMMAND_WORD + ": Change location of 
         /*
          * Change the folder path and update config.json
          */
-        Config config = new Config();
+        Config config = Config.getInstance();
         String configFilePathUsed = Config.DEFAULT_CONFIG_FILE;
         
         try{
