@@ -18,7 +18,7 @@ public class Config {
 	private String userPrefsFilePath = "preferences.json";
 	private String taskManagerFilePath = "data/taskmanager.xml";
 	private String taskManagerName = "MyTaskManager";
-	private static HashMap<String, String> customCommands = new HashMap<String, String>();
+	private HashMap<String, String> customCommands = new HashMap<String, String>();
 
 	public Config() {
 	}
@@ -29,7 +29,11 @@ public class Config {
 		}
 		return instance;
 	}
-
+	
+	public static void setInstance(Config instance) {
+		Config.instance = instance; 
+	}
+	
 	public String getAppTitle() {
 		return appTitle;
 	}
@@ -73,10 +77,18 @@ public class Config {
 	public void setCustomCommandFormat(String commandWord, String userCommand)
 			throws DublicatedValueCustomCommandsException {
 		for (String key : customCommands.keySet()) {
-			if (customCommands.get(key).equals(userCommand))
-				throw new DublicatedValueCustomCommandsException("This command already exists!");
+			if (customCommands.get(key).equals(userCommand) && !key.equals(commandWord))
+				throw new DublicatedValueCustomCommandsException("This custom command already exists for:"+key);
 		}
 		customCommands.put(commandWord, userCommand);
+	}
+	
+	public String getCommandbyCustomValue(String userCommand){
+		for (String key : customCommands.keySet()) {
+			if (customCommands.get(key).equals(userCommand))
+				return key;
+		}
+		return "";
 	}
 
 	@Override
@@ -91,6 +103,7 @@ public class Config {
 		Config o = (Config) other;
 
 		return Objects.equals(appTitle, o.appTitle) && Objects.equals(logLevel, o.logLevel)
+				&& Objects.equals(customCommands, o.customCommands)
 				&& Objects.equals(userPrefsFilePath, o.userPrefsFilePath)
 				&& Objects.equals(taskManagerFilePath, o.taskManagerFilePath)
 				&& Objects.equals(taskManagerName, o.taskManagerName);
@@ -98,7 +111,7 @@ public class Config {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(appTitle, logLevel, userPrefsFilePath, taskManagerFilePath, taskManagerName);
+		return Objects.hash(appTitle, logLevel, customCommands, userPrefsFilePath, taskManagerFilePath, taskManagerName);
 	}
 
 	@Override
@@ -112,6 +125,7 @@ public class Config {
 		return sb.toString();
 	}
 
+	@SuppressWarnings("serial")
 	public class DublicatedValueCustomCommandsException extends Exception {
 		public DublicatedValueCustomCommandsException(String message) {
 			super(message);

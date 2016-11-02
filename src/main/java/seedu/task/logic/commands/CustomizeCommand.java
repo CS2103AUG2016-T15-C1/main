@@ -1,7 +1,6 @@
 package seedu.task.logic.commands;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import seedu.task.commons.core.Config;
@@ -9,6 +8,7 @@ import seedu.task.commons.core.Config.DublicatedValueCustomCommandsException;
 import seedu.task.commons.util.ConfigUtil;
 import seedu.task.storage.StorageManager;
 
+//@@author A0153411W
 public class CustomizeCommand extends Command {
 
 	public static final String COMMAND_WORD = "customize";
@@ -29,7 +29,7 @@ public class CustomizeCommand extends Command {
 		Config config = Config.getInstance();
 		String configFilePathUsed = Config.DEFAULT_CONFIG_FILE;
 		if (!isCommandWordPresent(commandWord))
-			return new CommandResult("There is no such command.");
+			return new CommandResult("Command:"+commandWord+" is not found.");
 		try {
 			config.setCustomCommandFormat(commandWord, userCommand);
 			ConfigUtil.saveConfig(config, configFilePathUsed);
@@ -47,11 +47,7 @@ public class CustomizeCommand extends Command {
 	}
 
 	private boolean isCommandWordPresent(String commandWord) {
-		List<String> commands = Arrays.asList(AddCommand.COMMAND_WORD, SelectCommand.COMMAND_WORD,
-				DeleteCommand.COMMAND_WORD, ClearCommand.COMMAND_WORD, EditCommand.COMMAND_WORD,
-				FindCommand.COMMAND_WORD, ListCommand.COMMAND_WORD, ExitCommand.COMMAND_WORD, HelpCommand.COMMAND_WORD,
-				SaveCommand.COMMAND_WORD, DoneCommand.COMMAND_WORD, CustomizeCommand.COMMAND_WORD,
-				UndoCommand.COMMAND_WORD);
+		List<String> commands = Command.getAllCommands();
 		return commands.contains(commandWord);
 	}
 

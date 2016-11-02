@@ -62,7 +62,7 @@ public class ConfigUtilTest {
     @Test
     public void read_valuesMissingFromFile_defaultValuesUsed() throws DataConversionException {
         Config actual = read("EmptyConfig.json").get();
-        assertEquals(Config.getInstance(), actual);
+        assertEquals(new Config(), actual);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ConfigUtilTest {
     }
 
     private Config getTypicalConfig() {
-        Config config = Config.getInstance();
+        Config config = new Config();
         config.setAppTitle("Typical App Title");
         config.setLogLevel(Level.INFO);
         config.setUserPrefsFilePath("C:\\preferences.json");
@@ -97,7 +97,7 @@ public class ConfigUtilTest {
     @Test
     public void save_nullFile_assertionFailure() throws IOException {
         thrown.expect(AssertionError.class);
-        save(Config.getInstance(), null);
+        save(new Config(), null);
     }
 
     @Test
